@@ -107,6 +107,9 @@ int main () {
     gulgl::Window window{1024, 768, "Tutorial 01"};
     window.make_context_current();
 
+	// Create and compile our GLSL program from the shaders
+	GLuint programID = LoadShaders( "/home/golden/GUL/openGL/opengl-group/assets/vertex_shader.glsl", "/home/golden/GUL/openGL/opengl-group/assets/fragment_shader.glsl");
+
     // VAO
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
@@ -136,8 +139,10 @@ int main () {
     // Ensure we can capture the escape key being pressed below
     window.set_input_mode(GLFW_STICKY_KEYS, true);
     do {
-        glClear(GL_COLOR_BUFFER_BIT);
+    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    	// Use our shader
+    	glUseProgram(programID);
         // 1st attribute buffer : vertices
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
