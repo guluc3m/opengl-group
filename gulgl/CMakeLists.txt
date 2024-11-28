@@ -6,7 +6,7 @@ target_sources(gulgl
    PRIVATE
       window.hpp)
 
-target_link_libraries(gulgl PUBLIC
+target_link_libraries(gulgl INTERFACE
       glfw
       GLEW::GLEW
       Microsoft.GSL::GSL
