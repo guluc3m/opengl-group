@@ -1,16 +1,15 @@
 // Include standard headers
 #include <gulgl>
-
-using namespace gulgl;
+#include <iostream>
 
 int main () {
-  Window::hint(Window_hint::Samples, 4);
-  Window::hint(Window_hint::Context_version_major, 3);
-  Window::hint(Window_hint::Context_version_minor, 3);
-  Window::hint(Window_hint::OpenGL_forward_compat, GL_TRUE);
-  Window::hint(Window_hint::OpenGL_profile, GLFW_OPENGL_CORE_PROFILE);
+  gulgl::Window::hint(gulgl::Window_hint::Samples, 4);
+  gulgl::Window::hint(gulgl::Window_hint::Context_version_major, 3);
+  gulgl::Window::hint(gulgl::Window_hint::Context_version_minor, 3);
+  gulgl::Window::hint(gulgl::Window_hint::OpenGL_forward_compat, GL_TRUE);
+  gulgl::Window::hint(gulgl::Window_hint::OpenGL_profile, GLFW_OPENGL_CORE_PROFILE);
 
-  Window window{1024, 768, "Tutorial 01"};
+  gulgl::Window window{1024, 768, "Tutorial 01"};
   window.make_context_current();
 
   // Ensure we can capture the escape key being pressed below
