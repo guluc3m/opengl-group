@@ -21,5 +21,5 @@ find_package(OpenGL REQUIRED)
 
 add_subdirectory(gulgl)
 add_subdirectory(triangle)
-add_subdirectory(cube)
+add_subdirectory(cube-m)
 add_subdirectory(window)
