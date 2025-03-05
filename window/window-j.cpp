@@ -19,7 +19,7 @@ int main () {
     glClear(GL_COLOR_BUFFER_BIT);
 
     window.swap_buffers();
-    window.poll_events();
+    Window::poll_events();
   } // Check if the ESC key was pressed or the window was closed
   while(window.get_key(GLFW_KEY_ESCAPE) != GLFW_PRESS and not window.should_close() );
 

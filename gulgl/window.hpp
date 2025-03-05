@@ -1,3 +1,6 @@
+#ifndef WINDOW_HPP
+#define WINDOW_HPP
+
 #include <exception>
 #include <memory>
 #include <iostream>
@@ -72,7 +75,7 @@ namespace gulgl {
       void swap_buffers() { glfwSwapBuffers(window_.get()); }
       bool should_close() { return 0 != glfwWindowShouldClose(window_.get()); }
       auto get_key (int key) { return glfwGetKey(window_.get(), key); }
-  
+
       // Static functions
       static void hint (Window_hint hint, int value) {
         glfwWindowHint(static_cast<int>(hint), value);
@@ -105,3 +108,5 @@ namespace gulgl {
       std::unique_ptr<GLFWwindow, Window_deleter> window_{};
   };
 }
+
+#endif
