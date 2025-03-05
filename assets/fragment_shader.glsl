@@ -4,5 +4,5 @@ in vec3 my_pos;
 out vec3 color;
 
 void main(){
-    color = (my_pos + vec3(0.5, 0.5, 0.5));
+    color = (my_pos);
 }
