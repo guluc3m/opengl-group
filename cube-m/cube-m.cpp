@@ -127,55 +127,23 @@ int main () {
   window.make_context_current();
 
 	// Cargar los shaders (ruta absoluta)
-  GLuint programID = LoadShaders("/home/mario/Projects/CLionProjects/gulgu/cube-m/assets-m/vertexshadder.glsl",
-  	"/home/mario/Projects/CLionProjects/gulgu/cube-m/assets-m/fragmentshadder.glsl" );
+  GLuint programID = LoadShaders("/home/daniel/opengl-group/cube-m/assets-m/vertexshadder.glsl",
+  	"/home/daniel/opengl-group/cube-m/assets-m/fragmentshadder.glsl" );
 
 
   //VAO: abre un canal de comunicación entre cpu y gpu que nos permite pasar arrays
   GLuint VertexArrayID;
   glGenVertexArrays(1, &VertexArrayID);
   glBindVertexArray(VertexArrayID);
-// An array of 3 vectors which represents 3 vertices
-// Our vertices. Three consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
-// A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
-  static constexpr GLfloat g_vertex_buffer_data[] = {
-	-1.0f,-1.0f,-1.0f, // triangle 1 : begin
-	-1.0f,-1.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f, // triangle 1 : end
-	1.0f, 1.0f,-1.0f, // triangle 2 : begin
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f,-1.0f, // triangle 2 : end
-	1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	-1.0f,-1.0f,-1.0f,
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f,-1.0f,
-	-1.0f, 1.0f,-1.0f,
-	1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f
-	};
+  // An array of 3 vectors which represents 3 vertices
+  static const GLfloat g_vertex_buffer_data[] = {
+    0.8f, 0.8f, 0.0f,
+    0.8f, -0.8f, 0.0f,
+    -0.8f, 0.8f, 0.0f,
+    -0.8f, 0.8f, 0.0f,
+    -0.8f, -0.8f, 0.0f,
+    0.8f, -0.8f, 0.0f,
+ };
 
 
   // Objeto para englGetUniformLocaviar los vertices hacia la tarjeta gráfica. Se debe especificar array porque podria ser un flujo de datos
@@ -198,7 +166,6 @@ int main () {
   window.set_input_mode(GLFW_STICKY_KEYS, true);
 	//float angle = 0.0;
   do {
-
   		// Limpiar tanto el vértice como los shadders
   		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	  	glUseProgram(programID);
@@ -212,6 +179,54 @@ int main () {
 
 
   		glUniformMatrix4fv(matrix_id, 1, GL_FALSE, &matrix[0][0]);
+
+		// Projection matrix: 45° Field of View, 4:3 ratio, display range: 0.1 unit <-> 100 units
+		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) 1024/ (float)768, 0.1f, 100.0f);
+
+		// Camera matrix
+		glm::mat4 View = glm::lookAt(
+			glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
+			glm::vec3(0,0,0), // and looks at the origin
+			glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+			);
+
+		// Model matrix: an identity matrix (model will be at the origin)
+		glm::mat4 Model = glm::mat4(1.0f);
+		// Our ModelViewProjection: multiplication of our 3 matrices
+		glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
+		
+		// Get a handle for our "MVP" uniform
+		// Only during the initialisation
+		GLint MatrixID = glGetUniformLocation(programID, "MVP");
+
+		// Send our transformation to the currently bound shader, in the "MVP" uniform
+		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+
+		//computeMatricesFromInputs();
+		glm::mat4 ProjectionMatrix = Projection;
+		glm::mat4 ViewMatrix = View;
+		glm::mat4 ModelMatrix = Model;
+		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+		glm::vec3 position = glm::vec3( 0, 0, 5 );
+		// horizontal angle : toward -Z
+		float horizontalAngle = 3.14f;
+		// vertical angle : 0, look at the horizon
+		float verticalAngle = 0.0f;
+		// Initial Field of View
+		float initialFoV = 45.0f;
+
+		float speed = 3.0f; // 3 units / second
+		float mouseSpeed = 0.005f;
+		
+		// Get mouse position
+		//int xpos, ypos;
+		//glfwGetC(&xpos, &ypos);
+
+
+			
+
       // Estas lineas son para dibujar el triángulo
     // 1st attribute buffer : vertices
     // Index por el canal que se transmite
@@ -228,11 +243,11 @@ int main () {
     );
     // Usando un shadder
   	// Dibujar el triángulo
-    glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(0);
 
-    window.swap_buffers();
-    gulgl::Window::poll_events();
+		window.swap_buffers();
+		gulgl::Window::poll_events();
   } // Check if the ESC key was pressed or the window was closed
   while(window.get_key(GLFW_KEY_ESCAPE) != GLFW_PRESS and not window.should_close() );
 
