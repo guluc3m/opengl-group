@@ -113,15 +113,47 @@ int main () {
   GLuint VertexArrayID;
   glGenVertexArrays(1, &VertexArrayID);
   glBindVertexArray(VertexArrayID);
-  // An array of 3 vectors which represents 3 vertices
-  static const GLfloat g_vertex_buffer_data[] = {
-    0.8f, 0.8f, 0.0f,
-    0.8f, -0.8f, 0.0f,
-    -0.8f, 0.8f, 0.0f,
-    -0.8f, 0.8f, 0.0f,
-    -0.8f, -0.8f, 0.0f,
-    0.8f, -0.8f, 0.0f,
- };
+// An array of 3 vectors which represents 3 vertices
+// Our vertices. Three consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
+// A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
+  static constexpr GLfloat g_vertex_buffer_data[] = {
+	-1.0f,-1.0f,-1.0f, // triangle 1 : begin
+	-1.0f,-1.0f, 1.0f,
+	-1.0f, 1.0f, 1.0f, // triangle 1 : end
+	1.0f, 1.0f,-1.0f, // triangle 2 : begin
+	-1.0f,-1.0f,-1.0f,
+	-1.0f, 1.0f,-1.0f, // triangle 2 : end
+	1.0f,-1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f,
+	1.0f,-1.0f,-1.0f,
+	1.0f, 1.0f,-1.0f,
+	1.0f,-1.0f,-1.0f,
+	-1.0f,-1.0f,-1.0f,
+	-1.0f,-1.0f,-1.0f,
+	-1.0f, 1.0f, 1.0f,
+	-1.0f, 1.0f,-1.0f,
+	1.0f,-1.0f, 1.0f,
+	-1.0f,-1.0f, 1.0f,
+	-1.0f,-1.0f,-1.0f,
+	-1.0f, 1.0f, 1.0f,
+	-1.0f,-1.0f, 1.0f,
+	1.0f,-1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f,-1.0f,-1.0f,
+	1.0f, 1.0f,-1.0f,
+	1.0f,-1.0f,-1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f,-1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f,-1.0f,
+	-1.0f, 1.0f,-1.0f,
+	1.0f, 1.0f, 1.0f,
+	-1.0f, 1.0f,-1.0f,
+	-1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	-1.0f, 1.0f, 1.0f,
+	1.0f,-1.0f, 1.0f
+	};
 
 
   // Objeto para englGetUniformLocaviar los vertices hacia la tarjeta gráfica. Se debe especificar array porque podria ser un flujo de datos
@@ -136,21 +168,31 @@ int main () {
 
 	GLint matrix_id = glGetUniformLocation(programID, "matrix");
 	glm::mat4 matrix = glm::mat4(1.0f);
-	glm::mat4 traslation = glm::mat4(1.0f);
+	//glm::mat4 traslation = glm::mat4(1.0f);
 	glm::mat4 scale = glm::mat4(1.0f);
-	glm::mat4 rotation = glm::mat4(1.0f);
+	//glm::mat4 rotation = glm::mat4(1.0f);
 
   // Ensure we can capture the escape key being pressed below
   window.set_input_mode(GLFW_STICKY_KEYS, true);
-	float angle = 0.0;
+	//float angle = 0.0;
   do {
   		// Limpiar tanto el vértice como los shadders
   		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	  	glUseProgram(programID);
-		traslation[3][0] += 0.0001f;
+  		glm::mat4 translation = glm::perspective(glm::radians(45.0f), (float) -10.0f / (float)10.0f, 0.1f, 100.0f);
+
+		// Or, for an ortho camera:
+		//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+
+		// Camera matrix
+		glm::mat4 rotation = glm::lookAt(
+		    glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
+		    glm::vec3(0,0,0), // and looks at the origin
+		    glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+		    );
+
   		scale[1][1] -= 0.001f;
-  		rotation = glm::rotate(angle += 0.01f, glm::vec3(0.0f, 0.0f, 1.0f));
-  		matrix = traslation * rotation * scale;
+  		matrix = translation * rotation * scale;
   		glUniformMatrix4fv(matrix_id, 1, GL_FALSE, &matrix[0][0]);
       // Estas lineas son para dibujar el triángulo
     // 1st attribute buffer : vertices
@@ -168,7 +210,7 @@ int main () {
     );
     // Usando un shadder
   	// Dibujar el triángulo
-    glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(0);
 
     window.swap_buffers();
