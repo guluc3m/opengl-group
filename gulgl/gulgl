@@ -4,6 +4,12 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "errors.hpp"
 #include "window.hpp"
+#include "vao.hpp"
+#include "buffer.hpp"
+#include "shader.hpp"
+#include "program.hpp"
+#include "uniform.hpp"
 
 // vim: ft=cpp
