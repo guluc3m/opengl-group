@@ -1,5 +1,5 @@
-add_executable(window-m window-m.cpp)
-target_link_libraries(window-m gulgl)
+#add_executable(window-m window-m.cpp)
+#target_link_libraries(window-m gulgl)
 
 add_executable(window-h window-h.cpp)
 target_link_libraries(window-h gulgl)
