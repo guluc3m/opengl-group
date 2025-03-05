@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
@@ -94,6 +95,27 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 	return ProgramID;
 }
 
+void computeMatricesFromInputs() {
+	// position
+	glm::vec3 position = glm::vec3( 0, 0, 5 );
+	// horizontal angle : toward -Z
+	float horizontalAngle = 3.14f;
+	// vertical angle : 0, look at the horizon
+	float verticalAngle = 0.0f;
+	// Initial Field of View
+	float initialFoV = 45.0f;
+
+	float speed = 3.0f; // 3 units / second
+	float mouseSpeed = 0.005f;
+	// Get mouse position
+	int xpos, ypos;
+	glfwGetMousePos(&xpos, &ypos);
+	// Reset mouse position for next frame
+	glfwSetMousePos(1024/2, 768/2);
+
+}
+
+
 int main () {
   gulgl::Window::hint(gulgl::Window_hint::Samples, 4);
   gulgl::Window::hint(gulgl::Window_hint::Context_version_major, 3);
@@ -167,32 +189,28 @@ int main () {
   glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
 	GLint matrix_id = glGetUniformLocation(programID, "matrix");
-	glm::mat4 matrix = glm::mat4(1.0f);
+	//glm::mat4 matrix = glm::mat4(1.0f);
 	//glm::mat4 traslation = glm::mat4(1.0f);
-	glm::mat4 scale = glm::mat4(1.0f);
+	//glm::mat4 scale = glm::mat4(1.0f);
 	//glm::mat4 rotation = glm::mat4(1.0f);
 
   // Ensure we can capture the escape key being pressed below
   window.set_input_mode(GLFW_STICKY_KEYS, true);
 	//float angle = 0.0;
   do {
+
   		// Limpiar tanto el vértice como los shadders
   		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	  	glUseProgram(programID);
-  		glm::mat4 translation = glm::perspective(glm::radians(45.0f), (float) -10.0f / (float)10.0f, 0.1f, 100.0f);
 
-		// Or, for an ortho camera:
-		//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+  	// Compute the MVP matrix from keyboard and mouse input
+  		computeMatricesFromInputs();
+  		glm::mat4 ProjectionMatrix = getProjectionMatrix();
+  		glm::mat4 ViewMatrix = getViewMatrix();
+  		glm::mat4 ModelMatrix = glm::mat4(1.0);
+  		glm::mat4 matrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
-		// Camera matrix
-		glm::mat4 rotation = glm::lookAt(
-		    glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-		    glm::vec3(0,0,0), // and looks at the origin
-		    glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-		    );
 
-  		scale[1][1] -= 0.001f;
-  		matrix = translation * rotation * scale;
   		glUniformMatrix4fv(matrix_id, 1, GL_FALSE, &matrix[0][0]);
       // Estas lineas son para dibujar el triángulo
     // 1st attribute buffer : vertices
