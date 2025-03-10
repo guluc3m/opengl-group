@@ -173,12 +173,14 @@ int main () {
 	GLint matrix_id = glGetUniformLocation(programID, "matrix");
 	glm::mat4 model = glm::mat4(1.0f);
 	// glm::mat4 scale = glm::mat4(1.0f);
-	glm::mat4 rotation = glm::mat4(1.0f);
+	glm::mat4 rotationY = glm::mat4(1.0f);
+	glm::mat4 rotationZ = glm::mat4(1.0f);
 	// glm::mat4 translation = glm::mat4(1.0f);
 
     // Ensure we can capture the escape key being pressed below
     window.set_input_mode(GLFW_STICKY_KEYS, true);
-	float angle = 0.0; // Angulo para rotacion
+	float angleY = 0.0; // Angulo para rotacion
+	float angleZ = 0.0; // Angulo para rotacion
     do {
 
     	// Enable depth test
@@ -191,8 +193,19 @@ int main () {
     	// Use our shader
     	glUseProgram(programID);
 		// Matrices usadas
-    	rotation = glm::rotate(angle += 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
-    	model = rotation;
+    	if (window.get_key(GLFW_KEY_LEFT) == GLFW_PRESS) {
+    		rotationY = glm::rotate(angleY += 0.03f, glm::vec3(0.0f, 1.0f, 0.0f));
+    	}
+    	if (window.get_key(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+    		rotationY = glm::rotate(angleY -= 0.03f, glm::vec3(0.0f, 1.0f, 0.0f));
+    	}
+    	if (window.get_key(GLFW_KEY_UP) == GLFW_PRESS) {
+    		rotationZ = glm::rotate(angleZ += 0.03f, glm::vec3(0.0f, 0.0f, 1.0f));
+    	}
+    	if (window.get_key(GLFW_KEY_DOWN) == GLFW_PRESS) {
+    		rotationZ = glm::rotate(angleZ -= 0.03f, glm::vec3(0.0f, 0.0f, 1.0f));
+    	}
+    	model = rotationY * rotationZ;
 
     	// Projection matrix: 45° Field of View, 4:3 ratio, display range: 0.1 unit <-> 100 units
     	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) 1024 / (float)768, 0.1f, 100.0f);
