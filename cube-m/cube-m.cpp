@@ -242,51 +242,6 @@ static const GLfloat g_color_buffer_data[] = {
   		matrix = traslation * rotation * scale;
   		glUniformMatrix4fv(matrix_id, 1, GL_FALSE, &matrix[0][0]);
 
-		// Projection matrix: 45° Field of View, 4:3 ratio, display range: 0.1 unit <-> 100 units
-		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) 1024/ (float)768, 0.1f, 100.0f);
-
-		// Camera matrix
-		glm::mat4 View = glm::lookAt(
-			glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-			glm::vec3(0,0,0), // and looks at the origin
-			glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-			);
-
-		// Model matrix: an identity matrix (model will be at the origin)
-		glm::mat4 Model = glm::mat4(1.0f);
-		// Our ModelViewProjection: multiplication of our 3 matrices
-		glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
-		
-		// Get a handle for our "MVP" uniform
-		// Only during the initialisation
-		GLint MatrixID = glGetUniformLocation(programID, "MVP");
-
-		// Send our transformation to the currently bound shader, in the "MVP" uniform
-		// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-
-		//computeMatricesFromInputs();
-		glm::mat4 ProjectionMatrix = Projection;
-		glm::mat4 ViewMatrix = View;
-		glm::mat4 ModelMatrix = Model;
-		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
-
-		glm::vec3 position = glm::vec3( 0, 0, 5 );
-		// horizontal angle : toward -Z
-		float horizontalAngle = 3.14f;
-		// vertical angle : 0, look at the horizon
-		float verticalAngle = 0.0f;
-		// Initial Field of View
-		float initialFoV = 45.0f;
-
-		float speed = 3.0f; // 3 units / second
-		float mouseSpeed = 0.005f;
-		
-		// Get mouse position
-		//int xpos, ypos;
-		//glfwGetC(&xpos, &ypos);
-
-
 			
 
       // Estas lineas son para dibujar el triángulo
