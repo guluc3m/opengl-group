@@ -1,4 +1,3 @@
-// Include standard headers
 #include <gulgl>
 
 using namespace gulgl;
@@ -10,7 +9,7 @@ int main () {
   Window::hint(Window_hint::OpenGL_forward_compat, GL_TRUE);
   Window::hint(Window_hint::OpenGL_profile, GLFW_OPENGL_CORE_PROFILE);
 
-  Window window{1024, 768, "Tutorial 01"};
+  Window window{1024, 768, "Example 1 -- Window"};
   window.make_context_current();
 
   // Ensure we can capture the escape key being pressed below
@@ -21,6 +20,7 @@ int main () {
     window.swap_buffers();
     window.poll_events();
   } // Check if the ESC key was pressed or the window was closed
-  while(window.get_key(GLFW_KEY_ESCAPE) != GLFW_PRESS and not window.should_close() );
+  while(window.get_key(GLFW_KEY_ESCAPE) != GLFW_PRESS
+        and not window.should_close() );
 
 }

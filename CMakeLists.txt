@@ -20,6 +20,4 @@ find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
 add_subdirectory(gulgl)
-add_subdirectory(triangle)
-add_subdirectory(cube)
-add_subdirectory(window)
+add_subdirectory(examples)

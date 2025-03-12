@@ -6,6 +6,7 @@
 #include <concepts>
 #include <istream>
 #include <fstream>
+#include <filesystem>
 
 namespace gulgl {
 
@@ -49,12 +50,19 @@ namespace gulgl {
           gsl::czstring text{code.data()};
           glShaderSource(id_, 1, &text, nullptr);
         } else {
-          gsl::czstring text{static_cast<const char*>(data)};
-          glShaderSource(id_, 1, &text, nullptr);
+          if constexpr (std::same_as<const char*, String_type>) {
+            gsl::czstring text{data};
+            glShaderSource(id_, 1, &text, nullptr);
+          } else {
+            gsl::czstring text{data.c_str()};
+            glShaderSource(id_, 1, &text, nullptr);
+          }
         }
         glCompileShader(id_);
         details::check_status(glGetShaderiv, id_, GL_COMPILE_STATUS);
       }
+
+      Shader (std::filesystem::path const & path) : Shader{path.string(), true} {}
 
       Shader (Shader const &) = delete;
       Shader & operator= (Shader const &) = delete;
