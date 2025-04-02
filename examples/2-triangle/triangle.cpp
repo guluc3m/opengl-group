@@ -23,7 +23,7 @@ int main (int, char * argv[]) {
     {1.0f, -1.0f, 0.0f},
     {0.0f,  1.0f, 0.0f},
   };
-  gulgl::Buffer vertices{points};
+  gulgl::SimpleBuffer vertices{points};
 
   window.set_input_mode(GLFW_STICKY_KEYS, true);
   do {

@@ -1,6 +1,9 @@
 #include <gulgl>
 #include <vector>
 
+constexpr std::size_t width = 1024;
+constexpr std::size_t height = 768;
+
 int main (int, char * argv[]) {
   gulgl::Window::hint(gulgl::Window_hint::Samples, 4);
   gulgl::Window::hint(gulgl::Window_hint::Context_version_major, 3);
@@ -8,7 +11,7 @@ int main (int, char * argv[]) {
   gulgl::Window::hint(gulgl::Window_hint::OpenGL_forward_compat, GL_TRUE);
   gulgl::Window::hint(gulgl::Window_hint::OpenGL_profile, GLFW_OPENGL_CORE_PROFILE);
 
-  gulgl::Window window{1024, 768, "Example 3 -- Cube"};
+  gulgl::Window window{width, height, "Example 3 -- Cube"};
   window.make_context_current();
 
   std::filesystem::path const binary_path{argv[0]};
@@ -31,13 +34,32 @@ int main (int, char * argv[]) {
     { 1.0f, 1.0f, 1.0f}, { 1.0f, 1.0f,-1.0f}, {-1.0f, 1.0f,-1.0f},
     { 1.0f, 1.0f, 1.0f}, {-1.0f, 1.0f,-1.0f}, {-1.0f, 1.0f, 1.0f},
     { 1.0f, 1.0f, 1.0f}, {-1.0f, 1.0f, 1.0f}, { 1.0f,-1.0f, 1.0f}};
-  gulgl::Buffer vertices{points};
+  gulgl::SimpleBuffer vertices{points};
+
+  gulgl::Uniform mvp_uniform = program.get_uniform("MVP");
+  glm::mat4 mvp(1.0f);
 
   // Ensure we can capture the escape key being pressed below
   window.set_input_mode(GLFW_STICKY_KEYS, true);
   do {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     program.bind();
+
+    glm::mat4 proj =
+      glm::perspective(glm::radians(45.0f),
+      static_cast<float>(width) / height,
+      0.1f, 100.0f);
+    glm::mat4 view = glm::lookAt(
+      glm::vec3(4,3,3),
+      glm::vec3(0,0,0),
+      glm::vec3(0,1,0)
+    );
+    glm::mat4 model = glm::mat4(1.0f);
+    mvp = proj * view * model;
+    mvp_uniform.set(mvp);
+
     vertices.draw(0);
     program.unbind();
     window.swap_buffers();

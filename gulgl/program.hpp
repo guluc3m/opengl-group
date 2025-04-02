@@ -1,6 +1,9 @@
 #pragma once
 
+#include <iostream>
 #include "shader.hpp"
+#include "uniform.hpp"
+#include "errors.hpp"
 
 namespace gulgl {
 
@@ -25,6 +28,13 @@ namespace gulgl {
 
       void bind () const { glUseProgram(id_); }
       void unbind () const { glUseProgram(0); }
+
+      template <typename T>
+      Uniform get_uniform (T name) {
+        GLint const id = glGetUniformLocation(id_, name);
+        if (id < 0) { throw GLError{"Uniform doesn't exist!"}; }
+        return Uniform{id};
+      }
 
     private:
       GLuint id_;
