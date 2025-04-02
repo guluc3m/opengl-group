@@ -62,7 +62,8 @@ namespace gulgl {
     constexpr T get_glm_vec_type (glm::vec<N, T, Q>) { return std::declval<T>(); }
 
     template <typename T>
-    constexpr std::size_t glm_vec_dimension = static_cast<std::size_t>(get_glm_vec_dimension(std::declval<T>()));
+    constexpr std::size_t glm_vec_dimension =
+      static_cast<std::size_t>(get_glm_vec_dimension(T{}));
 
     template <typename V>
     using glm_vec_type = decltype(get_glm_vec_type(std::declval<V>()));
@@ -72,8 +73,7 @@ namespace gulgl {
   class SimpleBuffer {
       using vec_type = Container::value_type;
       using value_type = detail::glm_vec_type<vec_type>;
-      static constexpr std::size_t vec_size = 3;
-      // static constexpr auto vec_size = detail::glm_vec_dimension<vec_type>;
+      static constexpr auto vec_size = detail::glm_vec_dimension<vec_type>;
     public:
       SimpleBuffer(Container data) {
         glGenBuffers(1, &id_);  // Generate 1 buffer
