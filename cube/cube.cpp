@@ -4,7 +4,7 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 // Include standard headers
-#include <gulgl>
+#include "../gulgl/gulgl"
 #include <vector>
 #include <fstream>
 #include <sstream>
@@ -169,9 +169,9 @@ int main () {
     window.make_context_current();
 
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders( "/home/golden/GUL/openGL/opengl-group/assets/vertex_shader.glsl", "/home/golden/GUL/openGL/opengl-group/assets/fragment_shader.glsl");
+	GLuint programID = LoadShaders( "/home/golden/Offtopic/openGL/opengl-group/assets/vertex_shader.glsl", "/home/golden/Offtopic/openGL/opengl-group/assets/fragment_shader.glsl");
 	// Load Mariano Cajoy
-	GLuint Texture = loadBMP_custom("/home/golden/GUL/openGL/opengl-group/assets/cajoy.bmp");
+	GLuint Texture = loadBMP_custom("/home/golden/Offtopic/openGL/opengl-group/assets/cajoy.bmp");
 	if (Texture == 1){}
 	glUseProgram(programID);
     // VAO
@@ -268,6 +268,7 @@ int main () {
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     // Give our vertices to OpenGL.
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 
 	// Matrices de transformación
 	GLint matrix_id = glGetUniformLocation(programID, "matrix");
