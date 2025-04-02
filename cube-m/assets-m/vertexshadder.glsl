@@ -12,6 +12,6 @@ void main(){
     // xyz -> lugares del espacio
     // w -> 1 si es un punto, 0 si es una dirección
     my_pos = vertexPosition_modelspace;
-    gl_Position = MVP * matrix * vec4(vertexPosition_modelspace, 1);
+    gl_Position = MVP * vec4(vertexPosition_modelspace, 1);
     fragmentColor = vertexColor;
 }

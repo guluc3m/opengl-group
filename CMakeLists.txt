@@ -23,4 +23,4 @@ add_subdirectory(gulgl)
 add_subdirectory(triangle)
 add_subdirectory(cube-m)
 add_subdirectory(window)
-add_subdirectory(common)
+
