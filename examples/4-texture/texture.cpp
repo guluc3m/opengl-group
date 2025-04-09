@@ -24,44 +24,58 @@ int main (int, char * argv[]) {
   std::vector<glm::vec3> points = {
     {-1.0f,-1.0f,-1.0f}, {-1.0f,-1.0f, 1.0f}, {-1.0f, 1.0f, 1.0f},
     { 1.0f, 1.0f,-1.0f}, {-1.0f,-1.0f,-1.0f}, {-1.0f, 1.0f,-1.0f},
+
     { 1.0f,-1.0f, 1.0f}, {-1.0f,-1.0f,-1.0f}, { 1.0f,-1.0f,-1.0f},
     { 1.0f, 1.0f,-1.0f}, { 1.0f,-1.0f,-1.0f}, {-1.0f,-1.0f,-1.0f},
+
     {-1.0f,-1.0f,-1.0f}, {-1.0f, 1.0f, 1.0f}, {-1.0f, 1.0f,-1.0f},
     { 1.0f,-1.0f, 1.0f}, {-1.0f,-1.0f, 1.0f}, {-1.0f,-1.0f,-1.0f},
+
     {-1.0f, 1.0f, 1.0f}, {-1.0f,-1.0f, 1.0f}, { 1.0f,-1.0f, 1.0f},
     { 1.0f, 1.0f, 1.0f}, { 1.0f,-1.0f,-1.0f}, { 1.0f, 1.0f,-1.0f},
+
     { 1.0f,-1.0f,-1.0f}, { 1.0f, 1.0f, 1.0f}, { 1.0f,-1.0f, 1.0f},
     { 1.0f, 1.0f, 1.0f}, { 1.0f, 1.0f,-1.0f}, {-1.0f, 1.0f,-1.0f},
+
     { 1.0f, 1.0f, 1.0f}, {-1.0f, 1.0f,-1.0f}, {-1.0f, 1.0f, 1.0f},
     { 1.0f, 1.0f, 1.0f}, {-1.0f, 1.0f, 1.0f}, { 1.0f,-1.0f, 1.0f}};
-  std::vector<glm::vec2> texture_coords = {
-    {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f},
-    {1.0f, 1.0f}, {0.0f, 0.0f}, {0.0f, 1.0f},
-    {1.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f},
-    {1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f},
-    {0.0f, 0.0f}, {0.0f, 1.0f}, {0.0f, 1.0f},
-    {1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f},
-    {0.0f, 1.0f}, {0.0f, 0.0f}, {1.0f, 0.0f},
-    {1.0f, 1.0f}, {1.0f, 0.0f}, {1.0f, 1.0f},
-    {1.0f, 0.0f}, {1.0f, 1.0f}, {1.0f, 0.0f},
-    {1.0f, 1.0f}, {1.0f, 1.0f}, {0.0f, 1.0f},
-    {1.0f, 1.0f}, {0.0f, 1.0f}, {0.0f, 1.0f},
-    {1.0f, 1.0f}, {0.0f, 1.0f}, {1.0f, 0.0f}};
+
+  std::vector<glm::vec2> texture_coords {
+    {0.00f, 1.00f}, {0.00f, 0.66f}, {0.34f, 0.66f},
+    {1.00f, 1.00f}, {0.67f, 0.66f}, {1.00f, 0.66f},
+
+    {0.67f, 0.66f}, {0.34f, 0.33f}, {0.67f, 0.33f},
+    {1.00f, 1.00f}, {0.67f, 1.00f}, {0.67f, 0.66f},
+
+    {0.00f, 1.00f}, {0.34f, 0.66f}, {0.34f, 1.00f},
+    {0.67f, 0.66f}, {0.34f, 0.66f}, {0.34f, 0.33f},
+
+    {1.00f, 0.33f}, {1.00f, 0.66f}, {0.67f, 0.66f},
+    {0.67f, 1.00f}, {0.34f, 0.66f}, {0.67f, 0.66f},
+
+    {0.34f, 0.66f}, {0.67f, 1.00f}, {0.34f, 1.00f},
+    {0.00f, 0.66f}, {0.00f, 0.33f}, {0.34f, 0.33f},
+
+    {0.00f, 0.66f}, {0.34f, 0.33f}, {0.34f, 0.66f},
+    {0.67f, 0.33f}, {1.00f, 0.33f}, {0.67f, 0.66f}};
+
   gulgl::SimpleBuffer vertices{points};
   gulgl::SimpleBuffer uv{texture_coords};
 
   gulgl::Uniform mvp_uniform = program.get_uniform("MVP");
   glm::mat4 mvp(1.0f);
-  gulgl::Texture texture{"/home/joseaverde/Escritorio/cajoy.bmp"};
+  gulgl::Texture texture{assets/"cajoy.bmp"};
   gulgl::Uniform texture_uniform = program.get_uniform("texture_sampler");
 
   // Ensure we can capture the escape key being pressed below
   window.set_input_mode(GLFW_STICKY_KEYS, true);
+  float rot = 0.0f;
   do {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     program.bind();
+    rot += 0.005f;
 
     // Set the matrix
     glm::mat4 proj =
@@ -73,7 +87,7 @@ int main (int, char * argv[]) {
       glm::vec3(0,0,0),
       glm::vec3(0,1,0)
     );
-    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 model = glm::rotate(glm::mat4(1.0f), rot, glm::vec3(1.0));
     mvp = proj * view * model;
     mvp_uniform.set(mvp);
 

@@ -106,7 +106,13 @@ namespace gulgl {
     public:
       template <typename String_type>
       Texture (String_type path) {
-        id_ = detail::texture_load_BMP(path);
+        if constexpr (std::same_as<const char*, String_type>) {
+          gsl::czstring text{path};
+          id_ = detail::texture_load_BMP(text);
+        } else {
+          gsl::czstring text{path.c_str()};
+          id_ = detail::texture_load_BMP(text);
+        }
       }
 
       void bind() {
