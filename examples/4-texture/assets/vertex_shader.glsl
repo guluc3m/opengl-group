@@ -6,6 +6,7 @@ out vec2 UV;
 uniform mat4 MVP;
 
 void main () {
-  UV = vertex_position.xy;
+  UV.x = ((vertex_position.x + 1) / 2) / 3 + 1.0/3;
+  UV.y = ((vertex_position.y + 1) / 2) / 3 + 1.0/3;
   gl_Position = MVP * vec4(vertex_position, 1.0);
 }

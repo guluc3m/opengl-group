@@ -5,5 +5,5 @@ out vec4 colour;
 uniform sampler2D texture_sampler;
 
 void main () {
-  colour = vec4(texture(texture_sampler, UV).rgb, 0) + vec4(UV.xyx, 1);
+  colour = vec4(texture(texture_sampler, UV).rgb, 0);
 }
