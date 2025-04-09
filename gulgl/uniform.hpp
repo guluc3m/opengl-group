@@ -4,13 +4,9 @@ namespace gulgl {
 
   class Uniform {
     public:
-      void set (glm::mat4 const& mat) {
-        glUniformMatrix4fv(id_, 1, GL_FALSE, &mat[0][0]);
-      }
-
-      void set (glm::vec2 const& vec) {
-        glUniform2fv(id_, 1, &vec[0]);
-      }
+      void set (glm::mat4 const& mat) { glUniformMatrix4fv(id_, 1, GL_FALSE, &mat[0][0]); }
+      void set (glm::vec2 const& vec) { glUniform2fv(id_, 1, &vec[0]); }
+      void set (GLint val) { glUniform1i(id_, val); }
 
     private:
       friend class Program;

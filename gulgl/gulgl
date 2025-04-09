@@ -11,7 +11,8 @@
 #include "vao.hpp"
 #include "buffer.hpp"
 #include "shader.hpp"
-#include "program.hpp"
 #include "uniform.hpp"
+#include "texture.hpp"
+#include "program.hpp"
 
 // vim: ft=cpp
