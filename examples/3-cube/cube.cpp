@@ -60,7 +60,9 @@ int main (int, char * argv[]) {
     mvp = proj * view * model;
     mvp_uniform.set(mvp);
 
-    vertices.draw(0);
+    vertices.bind(0);
+    vertices.draw();
+    vertices.unbind(0);
     program.unbind();
     window.swap_buffers();
     window.poll_events();

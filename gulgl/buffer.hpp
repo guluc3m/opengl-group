@@ -93,20 +93,26 @@ namespace gulgl {
       [[nodiscard]] Container const & cdata () const { return data_; }
       [[nodiscard]] Container & data () { return data_; }
 
-      void draw (GLuint attrib_array) const {
+      void bind (GLuint attrib_array) const {
         glEnableVertexAttribArray(attrib_array);
         bind();
         // static_assert(vec_size == 3);
         glVertexAttribPointer(
-           0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+           attrib_array,       // attribute 0. No particular reason for 0, but must match the layout in the shader.
            vec_size,           // size
            GL_FLOAT,           // type
            GL_FALSE,           // normalized?
            0,                  // stride
            nullptr             // array buffer offset
         );
+      }
+
+      void draw () const {
         // Draw the triangle !
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(data_.size()));
+      }
+
+      void unbind (GLuint attrib_array) const {
         glDisableVertexAttribArray(attrib_array);
       }
 

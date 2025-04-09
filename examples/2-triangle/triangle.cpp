@@ -29,7 +29,9 @@ int main (int, char * argv[]) {
   do {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     program.bind();
-    vertices.draw(0);
+    vertices.bind(0);
+    vertices.draw();
+    vertices.unbind(0);
     program.unbind();
     window.swap_buffers();
     window.poll_events();

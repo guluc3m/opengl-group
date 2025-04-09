@@ -34,7 +34,21 @@ int main (int, char * argv[]) {
     { 1.0f, 1.0f, 1.0f}, { 1.0f, 1.0f,-1.0f}, {-1.0f, 1.0f,-1.0f},
     { 1.0f, 1.0f, 1.0f}, {-1.0f, 1.0f,-1.0f}, {-1.0f, 1.0f, 1.0f},
     { 1.0f, 1.0f, 1.0f}, {-1.0f, 1.0f, 1.0f}, { 1.0f,-1.0f, 1.0f}};
+  std::vector<glm::vec2> texture_coords = {
+    {0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f},
+    {1.0f, 1.0f}, {0.0f, 0.0f}, {0.0f, 1.0f},
+    {1.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f},
+    {1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f},
+    {0.0f, 0.0f}, {0.0f, 1.0f}, {0.0f, 1.0f},
+    {1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f},
+    {0.0f, 1.0f}, {0.0f, 0.0f}, {1.0f, 0.0f},
+    {1.0f, 1.0f}, {1.0f, 0.0f}, {1.0f, 1.0f},
+    {1.0f, 0.0f}, {1.0f, 1.0f}, {1.0f, 0.0f},
+    {1.0f, 1.0f}, {1.0f, 1.0f}, {0.0f, 1.0f},
+    {1.0f, 1.0f}, {0.0f, 1.0f}, {0.0f, 1.0f},
+    {1.0f, 1.0f}, {0.0f, 1.0f}, {1.0f, 0.0f}};
   gulgl::SimpleBuffer vertices{points};
+  gulgl::SimpleBuffer uv{texture_coords};
 
   gulgl::Uniform mvp_uniform = program.get_uniform("MVP");
   glm::mat4 mvp(1.0f);
@@ -67,7 +81,13 @@ int main (int, char * argv[]) {
     texture.bind();
     texture_uniform.set(GLint{0});
 
-    vertices.draw(0);
+    vertices.bind(0);
+    uv.bind(1);
+    
+    vertices.draw();
+
+    vertices.unbind(0);
+    uv.unbind(1);
 
     // Unbind and deattivate things
     texture.unbind();
